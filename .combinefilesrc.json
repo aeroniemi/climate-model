@@ -1,0 +1,30 @@
+{
+    "fileGroups": [
+        {
+            "fileGlobs": [
+                "*.r"
+            ],
+            "outputFileName": "outputModel.r",
+            "fileHeader": [
+                "#**********************************************************************************",
+                "# This is a concatenation of all the selected files, including files in subfolders.",
+                "# The start and end of each file contains a comment with its name, as well as a",
+                "# print statement.",
+                "#**********************************************************************************"
+            ],
+            "entryHeader": [
+                ""
+            ],
+            "entryFooter": [
+                ""
+            ],
+            "tocHeader": [
+                "# These are the line numbers for the included files:"
+            ],
+            "tocEntry": "# ${lineNo} ${entryPath}",
+            "tocFooter": [
+                "#**********************************************************************************"
+            ]
+        }
+    ]
+}
