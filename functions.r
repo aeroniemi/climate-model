@@ -17,6 +17,14 @@ toKelvin = function(celcius) {
 )
 
 calculateAlbedo = function(temp, oldTemp, oldAlbedo) {
+  if (length(oldTemp) == 0) {
+    # if this is the first cycle, oldTemp will be numeric(0)
+    # therefore, need to return the default albedo
+    return(oldAlbedo)
+  }
   newAlbedo = oldAlbedo + ((temp - oldTemp) * CONFIG$albSens)
   return(newAlbedo)
+}
+calculateAlbedoTemp = function(albedo) {
+  return((CONSTS$solar * (1 - albedo) / (4 * CONSTS$stefan)) ^ (1 / 4))
 }
