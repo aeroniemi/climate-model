@@ -15,3 +15,8 @@ toKelvin = function(celcius) {
   return(kelvin)
 }
 )
+
+calculateAlbedo = function(temp, oldTemp, oldAlbedo) {
+  newAlbedo = oldAlbedo + ((temp - oldTemp) * CONFIG$albSens)
+  return(newAlbedo)
+}

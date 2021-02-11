@@ -4,6 +4,7 @@ config <- list(
   initialAlbedo = 0.3, # Initial albedo
   initialCO2 = 369, # Initial CO2 level (ppmv)
   CO2sens = 0.005, # K temp increase per 1 ppmv
+  albSens = 0.005, # for every 1 degree of warming, albedo decreases by...
   co2Increase = 1.01, # factor to increase CO2 by each year
   initialTemp = TEMP$toKelvin(14) # Temperature at t=0 in kelvin
 )
@@ -25,6 +26,7 @@ CONSTS <- list(
 TS <- data.frame(
   year = numeric(CONFIG$runYears),
   co2 = numeric(CONFIG$runYears),
+  albedo = numeric(CONFIG$runYears),
   albTemp = numeric(CONFIG$runYears),
   co2Temp = numeric(CONFIG$runYears),
   earTemp = numeric(CONFIG$runYears)
@@ -32,6 +34,7 @@ TS <- data.frame(
 # set start values
 TS$year[1] = CONFIG$startYear
 TS$co2[1] = CONFIG$initialCO2
+TS$albedo[1] = CONFIG$initialAlbedo
 # calculate initial temperatures
 TS$albTemp[1] = (CONSTS$solar * (1 - CONFIG$initialAlbedo) / (4 * CONSTS$stefan)) ^ (1 / 4)
 TS$co2Temp[1] = CONFIG$initialTemp - TS$albTemp[1]
