@@ -4,38 +4,21 @@
 # It is expected that the majority of functions should be contained in other
 # files
 # ------------------------------------------------------------------------------
-source("config.r")
 source("functions.r")
+source("config.r")
 
 
-# ------------------------------------------------------------------------------
-# Calculate starting albedo temps
-# ------------------------------------------------------------------------------
-CONSTS$zeroAlbedoTemp <- ((CONSTS$solar / (4 * CONSTS$stefan)) ^ (1 / 4))
-CONSTS$albedoTemp <- ((CONSTS$solar * (1 - config$initialAlbedo) / (4 * CONSTS$stefan)) ^ (1 / 4))
-print("Albedo-only temperature is:")
-print(kToC(CONSTS$albedoTemp))
-# ------------------------------------------------------------------------------
-#  Calculate greenhouse effect at t=0
-# ------------------------------------------------------------------------------
-gasTemp <- (config$initialTemp - CONSTS$albedoTemp)
-earthTemp <- (CONSTS$albedoTemp + gasTemp)
-print("New earth starting temperature is:")
-print(kToC(earthTemp))
-
-
-year <- numeric(config$runYears)
-CO2 <- numeric(config$runYears)
-gasEffect <- numeric(config$runYears)
-
-year[1] <- config$startYear
-CO2[1] <- config$initialCO2
-gasEffect[1] <- gasTemp
-for (i in 2:config$runYears) {
-  year[i] = year[i - 1] + 1
-  CO2[i] = CO2[i - 1] * 1.01
-  gasEffect[i] = (CO2[i]-config$initialCO2) * config$CO2sens + gasTemp
+for (key in 2:CONFIG$runYears) {
+  # advance the year
+  TS$year[key] = TS$year[key - 1] + 1
+  # advance CO2
+  TS$co2[key] = TS$co2[key - 1] * CONFIG$co2Increase
+  # calculate new albedo temp
+  TS$albTemp[key] = (CONSTS$solar * (1 - CONFIG$initialAlbedo) / (4 * CONSTS$stefan)) ^ (1 / 4)
+  # calculate new CO2 warming
+  co2TempAddition = CONFIG$CO2sens * (TS$co2[key] - TS$co2[key - 1])
+  TS$co2Temp[key] = TS$co2Temp[key - 1] + co2TempAddition
+  # give final temperature value
+  TS$earTemp[key] = TS$albTemp[key] + TS$co2Temp[key]
 }
-
-plot(year, kToC(gasEffect + CONSTS$albedoTemp), type = "l", ylab = "Temp", xlab = "Year", main = "CO2 concentration from 2000 to 2100")
-mydata <- data.frame(year, CO2, gasEffect, kToC(gasEffect + CONSTS$albedoTemp))
+plot(TS$year, TEMP$toCelcius(TS$earTemp), type = "l", ylab = "Temp", xlab = "Year", main = "CO2 concentration from 2000 to 2100")
