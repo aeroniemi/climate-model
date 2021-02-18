@@ -6,10 +6,11 @@ config <- list(
   startYear = 2000, # Model start year
   initialAlbedo = 0.3, # Initial albedo
   initialCO2 = 369, # Initial CO2 level (ppmv)
-  CO2sens = 0.005, # K temp increase per 1 ppmv
+  CO2Sens = 0.005, # K temp increase per 1 ppmv
   albSens = -0.005, # for every 1 degree of warming, albedo increases by...
   vegSens = -0.01, # for every 1 degree of warming, vegetation increases by...
   cloudSens = -0.01,
+  oceanCO2Sens = 10,
   cloudAlbedoSens = 0.1, 
   vegAlbedoSens = -0.3,
   co2Increase = 1.01, # factor to increase CO2 by each year

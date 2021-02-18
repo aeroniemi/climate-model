@@ -6,8 +6,8 @@
 #' @param lastCo2 number; last period co2
 #' @returns co2 number; current period co2
 # ------------------------------------------------------------------------------
-calculateCo2 = function(lastCo2) {
   return(lastCo2 * CONFIG$co2Increase)
+calculateAnthCO2Change = function(lastCO2) {
 }
 # ------------------------------------------------------------------------------
 #' Calculate new albedo
@@ -76,5 +76,19 @@ calculateCloudChange = function(temp, oldTemp) {
     return(0)
   }
   change = ((temp - oldTemp) * CONFIG$cloudSens)
+  return(change)
+}
+# ------------------------------------------------------------------------------
+#' Calculate ocean CO2
+#' @param temp number; current temperature
+#' @param oldTemp number; last period's temperature
+#' @return change number; resultant period change
+# ------------------------------------------------------------------------------
+calculateOceanCO2Change = function(temp, oldTemp) {
+  if (length(oldTemp) == 0) {
+    # if this is the first cycle, oldTemp will be numeric(0)
+    return(0)
+  }
+  change = ((temp - oldTemp) * CONFIG$oceanCO2Sens)
   return(change)
 }
