@@ -38,4 +38,7 @@ for (key in 2:CONFIG$runYears) {
   # ----------------------------------------------------------------------------
   TS$earTemp[key] = TS$albTemp[key] + TS$co2Temp[key]
 }
+demoOutput = data.frame(
+  TS$year, TEMP$toCelcius(TS$earTemp)
+)
 plot(TS$year, TEMP$toCelcius(TS$earTemp), type = "l", ylab = "Temp", xlab = "Year", main = paste("Earth temperature from", TS$year[1], "to", TS$year[CONFIG$runYears]))

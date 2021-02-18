@@ -1,22 +1,32 @@
 # ------------------------------------------------------------------------------
 #~ Configuration
 # ------------------------------------------------------------------------------
-config <- list(
-  runYears = 300, # How many years to run for
+CONFIG <- list(
+  #~ General
+  runYears = 100, # How many years to run for
   startYear = 2000, # Model start year
-  initialAlbedo = 0.3, # Initial albedo
+  initialTemp = TEMP$toKelvin(14), # Temperature at t=0 in kelvin
   initialCO2 = 369, # Initial CO2 level (ppmv)
   CO2Sens = 0.005, # K temp increase per 1 ppmv
-  albSens = -0.005, # for every 1 degree of warming, albedo increases by...
-  vegSens = -0.01, # for every 1 degree of warming, vegetation increases by...
-  cloudSens = -0.01,
+  initialAlbedo = 0.3, # Initial albedo
+  #~ Cryosphere
+  enableCryo = TRUE,
+  cryoSens = -0.005, # for every 1 degree of warming, albedo increases by...
+  #~ Ocean CO2 rise
+  enableOceanCO2 = TRUE,
   oceanCO2Sens = 10,
-  cloudAlbedoSens = 0.1, 
+  #~ Anthropogenic CO2 rise
+  enableAnthCO2 = TRUE,
+  anthCO2Multiplier = 1.01, # factor to increase CO2 by each year
+  #~ Vegetation
+  enableVeg = TRUE,
+  vegSens = -0.01, # for every 1 degree of warming, vegetation increases by...
   vegAlbedoSens = -0.3,
-  co2Increase = 1.01, # factor to increase CO2 by each year
-  initialTemp = TEMP$toKelvin(14) # Temperature at t=0 in kelvin
+  #~ Clouds
+  enableClouds = TRUE,
+  cloudSens = -0.01,
+  cloudAlbedoSens = 0.1
 )
-CONFIG = config
 # ------------------------------------------------------------------------------
 #~ Constants
 # things that are not expected to be changed by the user
@@ -31,16 +41,14 @@ CONSTS <- list(
 # ------------------------------------------------------------------------------
 #~ Init vectors
 # ------------------------------------------------------------------------------
+CONFIG$runYears = CONFIG$runYears+1
 TS <- data.frame(
   year = numeric(CONFIG$runYears),
   anthCO2 = numeric(CONFIG$runYears),
   oceanCO2 = numeric(CONFIG$runYears),
-  #albedoChange = numeric(CONFIG$runYears),
   vegChange = numeric(CONFIG$runYears),
   cloudChange = numeric(CONFIG$runYears), 
   albedo = numeric(CONFIG$runYears),
-  #veg = numeric(CONFIG$runYears),
-  #cloud = numeric(CONFIG$runYears), 
   albTemp = numeric(CONFIG$runYears),
   co2Temp = numeric(CONFIG$runYears),
   earTemp = numeric(CONFIG$runYears)
@@ -49,8 +57,6 @@ TS <- data.frame(
 TS$year[1] = CONFIG$startYear
 TS$anthCO2[1] = CONFIG$initialCO2
 TS$albedo[1] = CONFIG$initialAlbedo
-#TS$veg[1] = 1
-#TS$cloud[1] = 1
 # calculate initial temperatures
 TS$albTemp[1] = calculateAlbedoTemp(CONFIG$initialAlbedo)
 TS$co2Temp[1] = CONFIG$initialTemp - TS$albTemp[1]
