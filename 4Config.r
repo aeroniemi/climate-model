@@ -33,11 +33,11 @@ CONSTS <- list(
 # ------------------------------------------------------------------------------
 TS <- data.frame(
   year = numeric(CONFIG$runYears),
-  co2Change = numeric(CONFIG$runYears),
-  albedoChange = numeric(CONFIG$runYears),
+  anthCO2 = numeric(CONFIG$runYears),
+  oceanCO2 = numeric(CONFIG$runYears),
+  #albedoChange = numeric(CONFIG$runYears),
   vegChange = numeric(CONFIG$runYears),
   cloudChange = numeric(CONFIG$runYears), 
-  co2 = numeric(CONFIG$runYears),
   albedo = numeric(CONFIG$runYears),
   #veg = numeric(CONFIG$runYears),
   #cloud = numeric(CONFIG$runYears), 
@@ -47,7 +47,7 @@ TS <- data.frame(
 )
 # set start values
 TS$year[1] = CONFIG$startYear
-TS$co2[1] = CONFIG$initialCO2
+TS$anthCO2[1] = CONFIG$initialCO2
 TS$albedo[1] = CONFIG$initialAlbedo
 #TS$veg[1] = 1
 #TS$cloud[1] = 1

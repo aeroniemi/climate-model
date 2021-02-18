@@ -17,13 +17,13 @@ for (key in 2:CONFIG$runYears) {
   # Advance the year
   TS$year[key] = TS$year[key - 1] + 1
   # Advance Anthropogenic CO2
-  TS$anthCO2Change[key] = calculateAnthCO2Change(TS$anthCO2Change[key - 1])
+  TS$anthCO2[key] = calculateAnthCO2(TS$anthCO2[key - 1])
   # Advance vegitation
   TS$vegChange[key] = calculateVegChange(TS$earTemp[key - 1], TS$earTemp[key - 2])
   # Advance cloud
   TS$cloudChange[key] = calculateCloudChange(TS$earTemp[key - 1], TS$earTemp[key - 2])
   # Advance ocean CO2
-  TS$oceanCO2Change[key] = calculateOceanCO2Change(TS$earTemp[key - 1], TS$earTemp[key - 2])
+  TS$oceanCO2[key] = calculateOceanCO2(TS$earTemp[key - 1])
   # Advance albedo
   TS$albedo[key] = calculateAlbedo(TS$earTemp[key - 1], TS$earTemp[key - 2], TS$albedo[key - 1], TS[key,])
   # ------------------------------------------------------------------------------
