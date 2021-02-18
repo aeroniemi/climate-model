@@ -11,7 +11,7 @@ config <- list(
   vegSens = -0.01, # for every 1 degree of warming, vegetation increases by...
   cloudSens = -0.01,
   cloudAlbedoSens = 0.1, 
-  vegAlbedoSens = 1.3,
+  vegAlbedoSens = -0.3,
   co2Increase = 1.01, # factor to increase CO2 by each year
   initialTemp = TEMP$toKelvin(14) # Temperature at t=0 in kelvin
 )

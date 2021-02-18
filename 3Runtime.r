@@ -23,13 +23,13 @@ calculateAlbedo = function(temp, oldTemp, oldAlbedo, time) {
     # therefore, need to return the default albedo
     return(oldAlbedo)
   }
-  partAlbedo = 1
+  partAlbedo = oldAlbedo
   partAlbedo = partAlbedo + ((temp - oldTemp) * CONFIG$albSens) # the cryo impact
-  partAlbedo = partAlbedo + ((temp - oldTemp) * CONFIG$albSens) # the cryo impact
+  partAlbedo = partAlbedo + (time$cloudChange * CONFIG$vegAlbedoSens) # the veg impact
+  partAlbedo = partAlbedo + (time$vegChange * CONFIG$cloudAlbedoSens) # the cloud impact
   
-  
-  newAlbedo = oldAlbedo + ((temp - oldTemp) * CONFIG$albSens) # the cryo impact
-  return(newAlbedo)
+  # newAlbedo = oldAlbedo + ((temp - oldTemp) * CONFIG$albSens) # the cryo impact
+  return(partAlbedo)
 }
 # ------------------------------------------------------------------------------
 #' Calculate base temperature from albedo
@@ -49,22 +49,6 @@ calculateCo2Temp = function(co2) {
   tempChange = CONFIG$CO2sens * co2Change
   initialCo2Temp = CONFIG$initialTemp - TS$albTemp[1]
   return(tempChange + initialCo2Temp)
-}
-# ------------------------------------------------------------------------------
-#' Calculate new cloud cover
-#' @param temp number; current temperature
-#' @param oldTemp number; last period's temperature
-#' @param oldCloud number; last period's albedo
-#' @return newAlbedo number; resultant period albedo
-# ------------------------------------------------------------------------------
-calculateCloud = function(temp, oldTemp, oldCloud) {
-  if (length(oldTemp) == 0) {
-    # if this is the first cycle, oldTemp will be numeric(0)
-    # therefore, need to return the default albedo
-    return(oldCloud)
-  }
-  newCloud = oldCloud + ((temp - oldTemp) * CONFIG$cloudSens)
-  return(newCloud)
 }
 # ------------------------------------------------------------------------------
 #' Calculate new vegitation
