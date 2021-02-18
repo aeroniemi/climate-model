@@ -14,19 +14,20 @@ CONFIG <- list(
   cryoSens = -0.005, # for every 1 degree of warming, albedo increases by...
   #~ Ocean CO2 rise
   enableOceanCO2 = TRUE,
-  oceanCO2Sens = 10,
+  oceanCO2Sens = 10, # for every 1 degree of warming, oceanic CO2 increases by ... ppmv
   #~ Anthropogenic CO2 rise
   enableAnthCO2 = TRUE,
   anthCO2Multiplier = 1.01, # factor to increase CO2 by each year
   #~ Vegetation
   enableVeg = TRUE,
   vegSens = -0.01, # for every 1 degree of warming, vegetation increases by...
-  vegAlbedoSens = -0.3,
+  vegAlbedoSens = -0.3, # for every 1 increase in vegitation, albedo increases by...
   #~ Clouds
   enableClouds = TRUE,
-  cloudSens = -0.01,
-  cloudAlbedoSens = 0.1
+  cloudSens = -0.01, # for every 1 degree of warming, cloud cover increases by...
+  cloudAlbedoSens = 0.1 # for every 1 increase in cloud cover, albedo increases by...
 )
+
 # ------------------------------------------------------------------------------
 #~ Constants
 # things that are not expected to be changed by the user
@@ -36,7 +37,6 @@ CONSTS <- list(
   stefan = 5.67E-8, # Stefan-Boltzmann constant
   last = FALSE
 )
-
 
 # ------------------------------------------------------------------------------
 #~ Init vectors
