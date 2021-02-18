@@ -7,8 +7,8 @@ CONFIG <- list(
   startYear = 2000, # Model start year
   initialTemp = TEMP$toKelvin(14), # Temperature at t=0 in kelvin
   initialCO2 = 369, # Initial CO2 level (ppmv)
-  CO2Sens = 0.005, # K temp increase per 1 ppmv
   initialAlbedo = 0.3, # Initial albedo
+  CO2Sens = 0.005, # K temp increase per 1 ppmv
   #~ Cryosphere
   enableCryo = TRUE,
   cryoSens = -0.005, # for every 1 degree of warming, albedo increases by...
