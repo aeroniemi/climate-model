@@ -38,28 +38,3 @@ CONSTS <- list(
   last = FALSE
 )
 
-# ------------------------------------------------------------------------------
-#~ Init vectors
-# ------------------------------------------------------------------------------
-CONFIG$runYears = CONFIG$runYears+1
-TS <- data.frame(
-  year = numeric(CONFIG$runYears),
-  anthCO2 = numeric(CONFIG$runYears),
-  oceanCO2 = numeric(CONFIG$runYears),
-  vegChange = numeric(CONFIG$runYears),
-  cloudChange = numeric(CONFIG$runYears), 
-  albedo = numeric(CONFIG$runYears),
-  albTemp = numeric(CONFIG$runYears),
-  co2Temp = numeric(CONFIG$runYears),
-  earTemp = numeric(CONFIG$runYears)
-)
-# set start values
-TS$year[1] = CONFIG$startYear
-TS$anthCO2[1] = CONFIG$initialCO2
-TS$albedo[1] = CONFIG$initialAlbedo
-# calculate initial temperatures
-TS$albTemp[1] = calculateAlbedoTemp(CONFIG$initialAlbedo)
-TS$co2Temp[1] = CONFIG$initialTemp - TS$albTemp[1]
-TS$earTemp[1] = TS$albTemp[1] + TS$co2Temp[1]
-# check initial earth temp matches the expectation
-stopifnot(TS$earTemp[1] == CONFIG$initialTemp)

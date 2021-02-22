@@ -6,11 +6,11 @@
 #' @param lastCo2 number; last period co2
 #' @returns AnthCO2 number; current period co2
 # ------------------------------------------------------------------------------
-calculateAnthCO2 = function(lastCO2) {
-    if (CONFIG$enableAnthCO2 == FALSE) {
+calculateAnthCO2 = function(lastCO2, config) {
+    if (config$enableAnthCO2 == FALSE) {
     return(lastCO2)
   }
-    return(lastCO2 * CONFIG$anthCO2Multiplier)
+    return(lastCO2 * config$anthCO2Multiplier)
 }
 # ------------------------------------------------------------------------------
 #' Calculate new albedo
@@ -20,18 +20,18 @@ calculateAnthCO2 = function(lastCO2) {
 #' @param time object; current period timeseries object
 #' @return albedo number; resultant period albedo
 # ------------------------------------------------------------------------------
-calculateAlbedo = function(temp, oldTemp, oldAlbedo, time) {
+calculateAlbedo = function(temp, oldTemp, oldAlbedo, time, config) {
   if (length(oldTemp) == 0) {
     # if this is the first cycle, oldTemp will be numeric(0)
     # therefore, need to return the default albedo
     return(oldAlbedo)
   }
   albedo = oldAlbedo
-  if (CONFIG$enableCryo == TRUE) {
-    albedo = albedo + ((temp - oldTemp) * CONFIG$cryoSens) # the cryo impact
+  if (config$enableCryo == TRUE) {
+    albedo = albedo + ((temp - oldTemp) * config$cryoSens) # the cryo impact
   }
-  albedo = albedo + (time$cloudChange * CONFIG$vegAlbedoSens) # the veg impact
-  albedo = albedo + (time$vegChange * CONFIG$cloudAlbedoSens) # the cloud impact
+  albedo = albedo + (time$cloudChange * config$vegAlbedoSens) # the veg impact
+  albedo = albedo + (time$vegChange * config$cloudAlbedoSens) # the cloud impact
   return(albedo)
 }
 # ------------------------------------------------------------------------------
@@ -39,18 +39,19 @@ calculateAlbedo = function(temp, oldTemp, oldAlbedo, time) {
 #' @param albedo number; current period albedo
 #' @returns temp number; current period base temperature
 # ------------------------------------------------------------------------------
-calculateAlbedoTemp = function(albedo) {
+calculateAlbedoTemp = function(albedo, config) {
   return((CONSTS$solar * (1 - albedo) / (4 * CONSTS$stefan)) ^ (1 / 4))
 }
 # ------------------------------------------------------------------------------
 #' Calculate CO2 temperature
 #' @param time object; current period timeseries
+#' @param initialAlbedoTemp number; first period albedo temperature component
 #' @returns temp number; current period CO2 sub-temperature
 # ------------------------------------------------------------------------------
-calculateCo2Temp = function(time) {
-  co2Change = (time$anthCO2+time$oceanCO2) - CONFIG$initialCO2
-  tempChange = CONFIG$CO2Sens * co2Change
-  initialCo2Temp = CONFIG$initialTemp - TS$albTemp[1]
+calculateCo2Temp = function(time, initialAlbedoTemp, config) {
+  co2Change = (time$anthCO2+time$oceanCO2) - config$initialCO2
+  tempChange = config$CO2Sens * co2Change
+  initialCo2Temp = config$initialTemp - initialAlbedoTemp
   return(tempChange + initialCo2Temp)
 }
 # ------------------------------------------------------------------------------
@@ -59,12 +60,12 @@ calculateCo2Temp = function(time) {
 #' @param oldTemp number; last period's temperature
 #' @return change number; resultant period change
 # ------------------------------------------------------------------------------
-calculateVegChange = function(temp, oldTemp) {
-  if (length(oldTemp) == 0 || CONFIG$enableVeg == FALSE) {
+calculateVegChange = function(temp, oldTemp, config) {
+  if (length(oldTemp) == 0 || config$enableVeg == FALSE) {
     # if this is the first cycle, oldTemp will be numeric(0)
     return(0)
   }
-  change = ((temp - oldTemp) * CONFIG$vegSens)
+  change = ((temp - oldTemp) * config$vegSens)
   return(change)
 }
 # ------------------------------------------------------------------------------
@@ -73,12 +74,12 @@ calculateVegChange = function(temp, oldTemp) {
 #' @param oldTemp number; last period's temperature
 #' @return change number; resultant period change
 # ------------------------------------------------------------------------------
-calculateCloudChange = function(temp, oldTemp) {
-  if (length(oldTemp) == 0 || CONFIG$enableClouds == FALSE) {
+calculateCloudChange = function(temp, oldTemp, config) {
+  if (length(oldTemp) == 0 || config$enableClouds == FALSE) {
     # if this is the first cycle, oldTemp will be numeric(0)
     return(0)
   }
-  change = ((temp - oldTemp) * CONFIG$cloudSens)
+  change = ((temp - oldTemp) * config$cloudSens)
   return(change)
 }
 # ------------------------------------------------------------------------------
@@ -86,10 +87,10 @@ calculateCloudChange = function(temp, oldTemp) {
 #' @param temp number; current temperature
 #' @return CO2 number; resultant period change
 # ------------------------------------------------------------------------------
-calculateOceanCO2 = function(temp) {
-  if (CONFIG$enableOceanCO2 == FALSE) {
+calculateOceanCO2 = function(temp, config) {
+  if (config$enableOceanCO2 == FALSE) {
     return(0)
   }
-  CO2 = ((temp - CONFIG$initialTemp) * CONFIG$oceanCO2Sens)
+  CO2 = ((temp - config$initialTemp) * config$oceanCO2Sens)
   return(CO2)
 }
