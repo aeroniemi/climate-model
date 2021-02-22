@@ -31,4 +31,4 @@ a3 = runMultipleModels(list(
     ))
 
 library(tidyverse)
-print(gf_line(earTemp-273.15~year, color=~title, data=a3))
+print(gf_line(TEMP$toCelcius(earTemp)~year, color=~title, data=a3, ylab = "Earth Mean Temperature/C"))
