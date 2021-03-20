@@ -85,7 +85,7 @@ calculateCloudChange = function(temp, oldTemp, config) {
 # ------------------------------------------------------------------------------
 #' Calculate ocean CO2
 #' @param temp number; current temperature
-#' @return CO2 number; resultant period change
+#' @return CO2 number; resultant period value
 # ------------------------------------------------------------------------------
 calculateOceanCO2 = function(temp, config) {
   if (config$enableOceanCO2 == FALSE) {
@@ -93,4 +93,40 @@ calculateOceanCO2 = function(temp, config) {
   }
   CO2 = ((temp - config$initialTemp) * config$oceanCO2Sens)
   return(CO2)
+}
+# ------------------------------------------------------------------------------
+#' Calculate permafrost forcing
+#' @param temp number; current temperature
+#' @return forcing number; resultant period value forcing, wm2
+# ------------------------------------------------------------------------------
+calculatePermaForcing = function(temp, config) {
+  if (config$enablePermaForcing == FALSE) {
+    return(0)
+  }
+  forcing = ((temp - config$initialTemp) * config$permaForcingSens)
+  return(forcing)
+}
+# ------------------------------------------------------------------------------
+#' Calculate fertilisation co2 forcing
+#' @param temp number; current temperature
+#' @return forcing number; resultant period value forcing, wm2
+# ------------------------------------------------------------------------------
+calculateFertCO2Forcing = function(temp, config) {
+  if (config$enableFertCO2 == FALSE) {
+    return(0)
+  }
+  forcing = ((temp - config$initialTemp) * config$fertCO2Sens)
+  return(forcing)
+}
+# ------------------------------------------------------------------------------
+#' Calculate forcing temperature
+#' @param time object; current period timeseries
+#' @param initialAlbedoTemp number; first period albedo temperature component
+#' @returns temp number; current period CO2 sub-temperature
+# ------------------------------------------------------------------------------
+calculateForcingTemp = function(time, initialAlbedoTemp, config) {
+  forcing = (time$permaForcing + time$fertCO2Forcing)
+  temp = config$cliFeedbackParam * forcing
+  return(temp)
+  # return(0)
 }

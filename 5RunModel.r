@@ -11,11 +11,14 @@ runModel = function(inConfig = list()) {
 		year = numeric(localConfig$runYears),
 		anthCO2 = numeric(localConfig$runYears),
 		oceanCO2 = numeric(localConfig$runYears),
+		permaForcing = numeric(localConfig$runYears),
+		fertCO2Forcing = numeric(localConfig$runYears),
 		vegChange = numeric(localConfig$runYears),
 		cloudChange = numeric(localConfig$runYears), 
 		albedo = numeric(localConfig$runYears),
 		albTemp = numeric(localConfig$runYears),
 		co2Temp = numeric(localConfig$runYears),
+		forTemp = numeric(localConfig$runYears),
 		earTemp = numeric(localConfig$runYears)
 	)
 	# set start values
@@ -43,6 +46,10 @@ runModel = function(inConfig = list()) {
 		TS$cloudChange[key] = calculateCloudChange(TS$earTemp[key - 1], TS$earTemp[key - 2], localConfig)
 		# Advance ocean CO2
 		TS$oceanCO2[key] = calculateOceanCO2(TS$earTemp[key - 1], localConfig)
+		# Advance permafrost forcing
+		TS$permaForcing[key] = calculatePermaForcing(TS$earTemp[key - 1], localConfig)
+		# Advance CO2 fertilisation forcing
+		TS$fertCO2Forcing[key] = calculateFertCO2Forcing(TS$earTemp[key - 1], localConfig)
 		# Advance albedo
 		TS$albedo[key] = calculateAlbedo(TS$earTemp[key - 1], TS$earTemp[key - 2], TS$albedo[key - 1], TS[key,], localConfig)
 		# ------------------------------------------------------------------------------
@@ -52,10 +59,12 @@ runModel = function(inConfig = list()) {
 		TS$albTemp[key] = calculateAlbedoTemp(TS$albedo[key], localConfig)
 		# Calculate new CO2 temp
 		TS$co2Temp[key] = calculateCo2Temp(TS[key,],TS$albTemp[1], localConfig)
+		# Calculate new forcings temp
+		TS$forTemp[key] = calculateForcingTemp(TS[key,],TS$albTemp[1], localConfig)
 		# ----------------------------------------------------------------------------
 		#* Calculate final temperature
 		# ----------------------------------------------------------------------------
-		TS$earTemp[key] = TS$albTemp[key] + TS$co2Temp[key]
+		TS$earTemp[key] = TS$albTemp[key] + TS$co2Temp[key] + TS$forTemp[key]
 	}
 	return(TS)
 }

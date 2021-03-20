@@ -25,7 +25,15 @@ CONFIG <- list(
   #~ Clouds
   enableClouds = TRUE,
   cloudSens = -0.01, # for every 1 degree of warming, cloud cover increases by...
-  cloudAlbedoSens = 0.1 # for every 1 increase in cloud cover, albedo increases by...
+  cloudAlbedoSens = 0.1, # for every 1 increase in cloud cover, albedo increases by...
+  #~ Fancy stuff
+  cliFeedbackParam = 3.0/3.7, # ipcc ts pg68, ecs for double co2 (3.0)/ erf for double co2 (3.7)
+  #~ Permafrost
+  enablePermaForcing = TRUE,
+  permaForcingSens = 0.16, # for every 1 degree of warming, permafrost forcing increases by...
+  #~ CO2 fertilisation
+  enableFertCO2 = TRUE,
+  fertCO2Sens = -1.0 # for every 1 degreee of warming, co2 fertilisation forcing increases by...
 )
 
 # ------------------------------------------------------------------------------
