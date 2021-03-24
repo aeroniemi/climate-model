@@ -19,8 +19,10 @@ runModel = function(inConfig = list()) {
 		albTemp = numeric(localConfig$runYears),
 		co2Temp = numeric(localConfig$runYears),
 		forTemp = numeric(localConfig$runYears),
-		earTemp = numeric(localConfig$runYears)
+		earTemp = numeric(localConfig$runYears),
+		tcr = numeric(localConfig$runYears)
 	)
+	tcr = NA
 	# set start values
 	TS$year[1] = localConfig$startYear
 	TS$anthCO2[1] = localConfig$initialCO2
@@ -65,6 +67,12 @@ runModel = function(inConfig = list()) {
 		#* Calculate final temperature
 		# ----------------------------------------------------------------------------
 		TS$earTemp[key] = TS$albTemp[key] + TS$co2Temp[key] + TS$forTemp[key]
+		if ((TS$oceanCO2[key]+TS$anthCO2[key]) > localConfig$doubleCO2)  {
+			if (is.na(tcr) == TRUE) {
+			tcr = TS$earTemp[key] - localConfig$initialTemp
+			TS$tcr[key] = TS$earTemp[key] - localConfig$initialTemp + localConfig$pre2000Warming
+			}
+		}
 	}
 	return(TS)
 }

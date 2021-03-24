@@ -9,6 +9,8 @@ CONFIG <- list(
   initialCO2 = 369, # Initial CO2 level (ppmv)
   initialAlbedo = 0.3, # Initial albedo
   CO2Sens = 0.005, # K temp increase per 1 ppmv
+  doubleCO2 = 570,
+  pre2000Warming = 0.90,
   #~ Cryosphere
   enableCryo = TRUE,
   cryoSens = -0.005, # for every 1 degree of warming, albedo increases by...
