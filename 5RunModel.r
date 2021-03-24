@@ -54,6 +54,7 @@ runModel = function(inConfig = list()) {
 		TS$fertCO2Forcing[key] = calculateFertCO2Forcing(TS$earTemp[key - 1], localConfig)
 		# Advance albedo
 		TS$albedo[key] = calculateAlbedo(TS$earTemp[key - 1], TS$earTemp[key - 2], TS$albedo[key - 1], TS[key,], localConfig)
+		
 		# ------------------------------------------------------------------------------
 		#* Calculate sub-temperatures
 		# ------------------------------------------------------------------------------
@@ -63,10 +64,16 @@ runModel = function(inConfig = list()) {
 		TS$co2Temp[key] = calculateCo2Temp(TS[key,],TS$albTemp[1], localConfig)
 		# Calculate new forcings temp
 		TS$forTemp[key] = calculateForcingTemp(TS[key,],TS$albTemp[1], localConfig)
+
 		# ----------------------------------------------------------------------------
 		#* Calculate final temperature
 		# ----------------------------------------------------------------------------
 		TS$earTemp[key] = TS$albTemp[key] + TS$co2Temp[key] + TS$forTemp[key]
+		
+		# ----------------------------------------------------------------------
+		# If current CO2 is greater than double CO2 and this is the first time,
+		# issue the TCR value for this model run
+		# ----------------------------------------------------------------------
 		if ((TS$oceanCO2[key]+TS$anthCO2[key]) > localConfig$doubleCO2)  {
 			if (is.na(tcr) == TRUE) {
 			tcr = TS$earTemp[key] - localConfig$initialTemp
@@ -87,7 +94,6 @@ runMultipleModels = function(configurations) {
 		mres$title = key$title
 		mres$colour = key$colour
 		mres$identifier = key$identifer
-		
 		rbind(results, mres) -> results
 	}
 	return(results)

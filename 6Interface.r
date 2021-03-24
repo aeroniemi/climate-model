@@ -1,8 +1,6 @@
 # ------------------------------------------------------------------------------
 # Run a model using the default config
 # ------------------------------------------------------------------------------
-# a1 = runModel()
-# plot(a1$year, a1$toCelcius(a1$earTemp), type = "l", ylab = "Temp", xlab = "Year", main = paste("Earth temperature from", a1$year[1], "to", a1$year[CONFIG$runYears]))
 a3 = runMultipleModels(list(
     cfMean = list(
         title = "cfMean",
@@ -104,58 +102,56 @@ a3 = runMultipleModels(list(
         )
     )
 ))
+# ------------------------------------------------------------------------------
+# Data tidying
+# ------------------------------------------------------------------------------
+# format the a2 table to fit the requirements
 a3$earTemp = a3$earTemp - CONFIG$initialTemp
-a4 = subset(a3, select = c(year, title, earTemp))
-a5 <- spread(a4, title, earTemp)
+a4 = subset(a3, select = c(year, title, earTemp)) # final temp by model
+a5 <- reshape(a4, idvar = "year", timevar = "title", direction = "wide", v.names="earTemp") # intergrated model results
+colnames(a5) <- sub("earTemp\\.", "", colnames(a5))
+# a5 <- spread(a4, title, earTemp) # intergrated model results (uses tidyr, better method but not vanilla, comment 113, 114) 
+a6 = subset(a3, select = c(year, title, tcr), tcr > 0) # tcr by model
 
-a6 = subset(a3, select = c(year, title, tcr), tcr > 0)
+# ------------------------------------------------------------------------------
+#! Chart drawing setup
+#! Although not required, the following section uses common libraries to draw 
+#! plots used in the associated report. The associated code can be run by 
+#! uncommenting these lines. Raw results can be found in tables a2-a6.
+# ------------------------------------------------------------------------------
+# #import chart libraries
+# library(tidyverse)
 
-# a4 <- spread(a3, title, earTemp)
-# a4 <- subset(spread(a3, title, earTemp), cfNlMean == NA)
-
-library(tidyverse)
-library(directlabels)
-library('Cairo')
-library(gridExtra)
-# CairoWin()
-# print(gf_ribbon(forMax+forMin~year,  data=a5, ylab = "Earth Mean Temperature/C"))
-
-
-
-#%>%gf_theme(theme_bw())
-# figure1 = ggplot(data=a3, aes(x=year-2000, y=earTemp-CONFIG$initialTemp, ymin=0, ymax=10)) + 
-#  geom_line() + 
-#  geom_ribbon(alpha=0.5)
-#  print(figure1)
-
-# print(gf_line(earTemp~year, color=~title, data=a3, ylab = "Earth Mean Temperature/C")%>%gf_theme(theme_bw()))
-
-figure1 = ggplot(a5, aes(year-2000)) + 
-  geom_ribbon(aes(ymin=cfNlMin, ymax=cfMean),fill=rgb(191/255, 191/255, 191/255))+
-  geom_line(aes(y=Control, color=c("Control")), color=rgb(0,0,0), size=1) +
-  geom_line(aes(y=cfNlMean, color=c("cfNlMean")), color= rgb(112/255,160/255,205/255), size=1) + 
-  geom_ribbon(aes(ymin=pfMin, ymax=pfMax),fill=rgb(191/255, 191/255, 191/255))+
-  geom_line(aes(y=pfMean, color=c("cfNlMean")), color= rgb(196/255,121/255,0/255), size=1) +
-  theme_bw() +
-  scale_y_continuous(position = "right", expand = expansion(mult = c(0, 0   )), breaks=seq(0,9, 0.5),limits=c(NA, 9))+
-#   scale_y_continuous(position = "right", expand = expansion(mult = c(0, .1)), breaks=seq(0,5, 0.25))+
-  scale_x_continuous( expand = expansion(mult = c(0, .0)),  breaks=seq(0,100, 10))+
-  xlab("Years since model start")+
-  ylab(expression('Temperature Change /'~degree*'C'))+
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
-
-figure2 = ggplot(a5, aes(year-2000)) + 
-  geom_ribbon(aes(ymin=forMin, ymax=forMax),fill=rgb(191/255, 191/255, 191/255))+
-  geom_line(aes(y=Control, color=c("Control")), color=rgb(0,0,0), size=1) +
-  geom_line(aes(y=com, color=c("cfNlMean")), color= rgb(196/255,121/255,0/255), size=1) + 
-  geom_line(aes(y=comNl, color=c("cfNlMean")), color= rgb(112/255,160/255,205/255), size=1) + 
-  theme_bw() +
-  scale_y_continuous(position = "right", expand = expansion(mult = c(0, 0)), breaks=seq(0,9, 0.2),limits=c(NA, 4.800001))+
-#   scale_y_continuous(position = "right", expand = expansion(mult = c(0, .1)), breaks=seq(0,5, 0.25))+
-  scale_x_continuous( expand = expansion(mult = c(0, .0)),  breaks=seq(0,100, 10))+
-  xlab("Years since model start")+
-  ylab(expression('Temperature Change /'~degree*'C'))+
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
-
-print(figure1)
-print(figure2)
+# # ------------------------------------------------------------------------------
+# # Figure 1
+# # control/cf/pf alone forcing sensitivity study
+# # ------------------------------------------------------------------------------
+# figure1 = ggplot(a5, aes(year-2000)) + 
+#   geom_ribbon(aes(ymin=cfNlMin, ymax=cfMean),fill=rgb(191/255, 191/255, 191/255))+
+#   geom_line(aes(y=Control, color=c("Control")), color=rgb(0,0,0), size=1) +
+#   geom_line(aes(y=cfNlMean, color=c("cfNlMean")), color= rgb(112/255,160/255,205/255), size=1) + 
+#   geom_ribbon(aes(ymin=pfMin, ymax=pfMax),fill=rgb(191/255, 191/255, 191/255))+
+#   geom_line(aes(y=pfMean, color=c("cfNlMean")), color= rgb(196/255,121/255,0/255), size=1) +
+#   theme_bw() +
+#   scale_y_continuous(position = "right", expand = expansion(mult = c(0, 0   )), breaks=seq(0,9, 0.5),limits=c(NA, 9))+
+#   scale_x_continuous( expand = expansion(mult = c(0, .0)),  breaks=seq(0,100, 10))+
+#   xlab("Years since model start")+
+#   ylab(expression('Temperature Change /'~degree*'C'))+
+#   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+# print(figure1)
+# # ------------------------------------------------------------------------------
+# # Figure 1
+# # alpha sensitivity study
+# # ------------------------------------------------------------------------------
+# figure2 = ggplot(a5, aes(year-2000)) + 
+#   geom_ribbon(aes(ymin=forMin, ymax=forMax),fill=rgb(191/255, 191/255, 191/255))+
+#   geom_line(aes(y=Control, color=c("Control")), color=rgb(0,0,0), size=1) +
+#   geom_line(aes(y=com, color=c("cfNlMean")), color= rgb(196/255,121/255,0/255), size=1) + 
+#   geom_line(aes(y=comNl, color=c("cfNlMean")), color= rgb(112/255,160/255,205/255), size=1) + 
+#   theme_bw() +
+#   scale_y_continuous(position = "right", expand = expansion(mult = c(0, 0)), breaks=seq(0,9, 0.2),limits=c(NA, 4.800001))+
+#   scale_x_continuous( expand = expansion(mult = c(0, .0)),  breaks=seq(0,100, 10))+
+#   xlab("Years since model start")+
+#   ylab(expression('Temperature Change /'~degree*'C'))+
+#   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+# print(figure2)

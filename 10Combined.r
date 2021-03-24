@@ -4,8 +4,6 @@
 # It is expected that the majority of functions should be contained in other
 # files
 # ------------------------------------------------------------------------------
-library(tidyverse)
-library(mosaic)
 source("./2Functions.r")
 source("./3Runtime.r")
 source("./4Config.r")

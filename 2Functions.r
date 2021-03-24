@@ -16,7 +16,7 @@ toCelcius = function(kelvin) {
 },
 # ------------------------------------------------------------------------------
 #' Celcius to Kelvin
-#' @param celcous number
+#' @param celcius number
 #' @returns kelvin number
 # ------------------------------------------------------------------------------
 toKelvin = function(celcius) {
