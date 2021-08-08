@@ -1,57 +1,9 @@
 # climate-model
- Climate model for Earth Systems 2020/201
-
-
-## Core concepts
-### Radiative Balance
-- Our models are written focusing on this primarily
-- Incident solar radiation is near-constant
-    - In our case, around 1370W m^{-2}
-- E = σT^4
-- At the balance point, you get T_{BB}
-- T_{bb}=\sqrt{\frac{S}{4σ}} (needs 4th root)
-- As earth doesn't absorb everything, 
-
-
-
-
-## Ideas for additional processes
-### Volcanism
-- random (maybe seed-based)? frequency events of varying magnitude, release CO2+particulates
-- particulates
-### Dust
-- betts 2008
-
-### water vapour
-"However, the amount of water vapour in the atmosphere is controlled mostly by air temperature, rather
-than by emissions" AR5, 682
-"With every extra degree of air temperature,
-the atmosphere can retain around 7% more water
-vapour"
-kg m^2, 7% increase for 1c
-
-### blackbody feedback
-
-
-the rahmstorf guy did stuff like this - look at that?
-
-## Finding params
-feedbacks given in w m2 k 
-0.02 w m2 k
-can use climate sensitivity
-1 degree warming -> 0.02w m2
-4 wm2 -> 3c
-1 wm2 -> 3/4 c
-
-find 3.93 from ar6
-
-
-## Climate sensitivity
-- a double CO2 scenario leads to 3.0c warming (IPCC TS p68)
-- a double CO2 scenario leads to 3.7 w m2 rfg (IPCC TS p68)
-- thus 0.81 c warming per 1w rfan
-
-1 degree temp increase leads to methane release, resulting in x amount of radiative forcing
-x radiative forcing leads to x * 0.81c additional warming
-
-1w change leads to 1/1.23 = 0.81 c change
+ Climate model for my Earth Systems 2020/2021 unit, written in R. It's designed to be used in RStudio/vs-code, and includes the requesite project files for both
+ 
+# Usage
+- To run the model, execute the ``10Combined.r`` file, which imports all other files
+- No libraries are required for the default configuration, although ``ggplot2`` is required for graph drawing
+- By default, when executed the model will 11 times with a series of different configurations. To modify these, edit the ``runMultipleModels()`` list in ``6Interface.r``. It will also create a table with the columns that were required for the unit, as well as a number of other outputs that vary on a yearly basis over the run of the model.
+- Chart drawing is disabled by default, but if required two example ``ggplot2`` charts are included at the bottom of ``6Interface.r``
+- Default config variables can be found in ``4Config.r`` and are documented there. All variables in the ``CONFIG`` list can be modified on a per-run basis when using ``runMultipleModels()`` by passing a override table. It is recommended to keep ``runYears`` and ``startYear`` constant for comparison purposes, but it will still run if these are changed
